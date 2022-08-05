@@ -25,6 +25,8 @@ public class ConsumeUserWebService {
    RestTemplate restTemplate;
 
    // Gel All Users
+	//
+	//
    @GetMapping(value = "/template/allusers")
    public String getProductList() {
       HttpHeaders headers = new HttpHeaders();
