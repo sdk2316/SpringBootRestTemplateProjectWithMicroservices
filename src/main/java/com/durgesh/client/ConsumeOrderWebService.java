@@ -1,5 +1,8 @@
 package com.durgesh.client;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
@@ -153,6 +156,49 @@ public class ConsumeOrderWebService {
 		return Arrays.asList(response.getBody());
 
 	}
+	
+	
+	// Get Data In Excel
+
+		@GetMapping(value = "/order/getExcelFile",produces = { "application/excel" })
+		public void getExcelReport() {
+
+			 restTemplate
+					.getForEntity("http://localhost:8000/order/OrderDetails/export/excel", Object[].class);
+			
+
+		}
+		
+		
+		// Get Data In PDF
+		
+
+				//@GetMapping(value = "/order/getPDFFile",produces = { "application/pdf" })
+		@GetMapping(value = "/order/getPDFFile",produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+				public void getPdfReport() {
+
+					 restTemplate
+							.getForEntity("http://localhost:8000/order/OrderDetails/export/pdf", Object[].class);
+					
+
+				}
+		
+		
+		@GetMapping(value = "/order/getPDFFiles", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+		  public ResponseEntity<?> downloadAnyFile() {
+		  
+		    byte[] byteArray = null;  // data comes from external service call in byte[]
+		    try {
+		       String fileName = "your-custom-file-name";
+		      byteArray = Files.readAllBytes(Paths.get("http://localhost:8000/order/OrderDetails/export/pdf"));
+		    } catch (IOException e) {
+		      e.printStackTrace();
+		    }
+		    return ResponseEntity.ok()
+		        .contentType(MediaType.APPLICATION_OCTET_STREAM)
+		        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"")
+		        .body(byteArray);
+		  }
 
 	// Get By customerName
 
